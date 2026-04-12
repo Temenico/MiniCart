@@ -1,11 +1,40 @@
-# Frontend
+# 🖥️ Frontend
 
-Initial frontend bootstrap for MiniCart.
+Módulo web de MiniCart construido con React + Vite.
 
-## Current Scope (HU-01)
+## 🎯 Objetivo
 
-- React + Vite minimal setup
-- Base folders by responsibility
-- Initial app entrypoint and global style
+Proveer una interfaz clara para gestión de productos y, posteriormente, gestión de carritos.
 
-Product and cart UI features will be implemented in HU-06 and HU-07.
+## ✅ Alcance implementado (HU-06)
+
+- Vista de listado de productos.
+- Formulario para crear productos.
+- Formulario para editar productos.
+- Acción para eliminar productos.
+- Mensajes de éxito y error.
+- Validaciones de campos requeridos.
+- Consumo de API mediante `api-gateway`.
+
+## 🌐 Integración con API Gateway
+
+Por defecto el frontend consume:
+
+- `http://localhost:8080/api`
+
+Se puede sobrescribir con variable de entorno:
+
+- `VITE_API_BASE_URL`
+
+Ejemplo:
+
+```bash
+VITE_API_BASE_URL=http://localhost:8080/api
+```
+
+## ▶️ Ejecución local
+
+```bash
+npm install
+npm run dev
+```
