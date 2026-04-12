@@ -1,0 +1,13 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cartGradient" x1="16" y1="12" x2="112" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0D63C9"/>
+      <stop offset="1" stop-color="#0A3E85"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="#EFF5FC"/>
+  <path d="M30 36H38L45 80H93" stroke="url(#cartGradient)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M49 69H90L98 47H44" stroke="url(#cartGradient)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="53" cy="95" r="8" fill="#0A3E85"/>
+  <circle cx="86" cy="95" r="8" fill="#0A3E85"/>
+</svg>
