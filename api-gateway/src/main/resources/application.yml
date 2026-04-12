@@ -3,11 +3,33 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          "[/**]":
+            allowedOrigins:
+              - "http://localhost:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
       routes:
-        - id: cart-service
-          uri: http://localhost:8081
+        - id: products-route
+          uri: ${CART_SERVICE_URL:http://localhost:8081}
           predicates:
-            - Path=/api/**
+            - Path=/api/products,/api/products/**
+          filters:
+            - StripPrefix=1
+
+        - id: carts-route
+          uri: ${CART_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/carts,/api/carts/**
+          filters:
+            - StripPrefix=1
 
 server:
   port: 8080
