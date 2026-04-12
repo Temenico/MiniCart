@@ -2,11 +2,13 @@ databaseChangeLog:
   - changeSet:
       id: 100-seed-products
       author: dev-team
+      validCheckSum:
+        - ANY
       preConditions:
         onFail: HALT
         onError: HALT
-        - tableExists:
-            tableName: product
+        tableExists:
+          tableName: product
       changes:
         - insert:
             tableName: product
@@ -19,7 +21,7 @@ databaseChangeLog:
                   value: Mouse ergonómico inalámbrico con receptor USB
               - column:
                   name: price
-                  valueNumeric: 25.90
+                  valueNumeric: 25900
               - column:
                   name: stock
                   valueNumeric: 30
@@ -37,7 +39,7 @@ databaseChangeLog:
                   value: Teclado mecánico compacto con switches brown
               - column:
                   name: price
-                  valueNumeric: 78.50
+                  valueNumeric: 78500
               - column:
                   name: stock
                   valueNumeric: 20
@@ -55,10 +57,35 @@ databaseChangeLog:
                   value: Hub multipuerto USB-C con HDMI y USB 3.0
               - column:
                   name: price
-                  valueNumeric: 42.00
+                  valueNumeric: 42000
               - column:
                   name: stock
                   valueNumeric: 15
               - column:
                   name: active
                   valueBoolean: true
+
+  - changeSet:
+      id: 101-normalize-seed-prices-cop
+      author: dev-team
+      preConditions:
+        onFail: MARK_RAN
+        onError: HALT
+        tableExists:
+          tableName: product
+      changes:
+        - sql:
+            sql: |
+              UPDATE product
+              SET price = 25900
+              WHERE name = 'Mouse inalámbrico' AND price < 1000;
+        - sql:
+            sql: |
+              UPDATE product
+              SET price = 78500
+              WHERE name = 'Teclado mecánico' AND price < 1000;
+        - sql:
+            sql: |
+              UPDATE product
+              SET price = 42000
+              WHERE name = 'Hub USB-C' AND price < 1000;

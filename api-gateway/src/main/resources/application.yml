@@ -7,7 +7,7 @@ spring:
         cors-configurations:
           "[/**]":
             allowedOrigins:
-              - "http://localhost:5173"
+              - "${FRONTEND_ORIGIN:http://localhost:5273}"
             allowedMethods:
               - GET
               - POST
@@ -18,21 +18,21 @@ spring:
               - "*"
       routes:
         - id: products-route
-          uri: ${CART_SERVICE_URL:http://localhost:8081}
+          uri: ${CART_SERVICE_URL:http://localhost:8091}
           predicates:
             - Path=/api/products,/api/products/**
           filters:
             - StripPrefix=1
 
         - id: carts-route
-          uri: ${CART_SERVICE_URL:http://localhost:8081}
+          uri: ${CART_SERVICE_URL:http://localhost:8091}
           predicates:
             - Path=/api/carts,/api/carts/**
           filters:
             - StripPrefix=1
 
 server:
-  port: 8080
+  port: ${SERVER_PORT:8090}
 
 management:
   endpoints:

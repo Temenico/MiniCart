@@ -10,9 +10,9 @@ Módulo encargado de actuar como punto de entrada único entre el frontend y `ca
 
 ## ⚙️ Configuración actual (HU-05)
 
-- Puerto del gateway: `8080`
+- Puerto del gateway: `8090`
 - URL objetivo de microservicio:
-  - `CART_SERVICE_URL` (por defecto `http://localhost:8081`)
+  - `CART_SERVICE_URL` (por defecto `http://localhost:8091`)
 
 ## 🛣️ Rutas configuradas
 
@@ -28,7 +28,7 @@ Las rutas usan `StripPrefix=1`, por lo que:
 
 Se permite origen de frontend local:
 
-- `http://localhost:5173`
+- `http://localhost:5273`
 
 ## ✅ Regla de diseño
 

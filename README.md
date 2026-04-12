@@ -73,6 +73,13 @@ README.md
 
 ## ▶️ How To Run
 
+### 🔌 Default Ports (conflict-safe setup)
+
+- Frontend: `http://localhost:5273`
+- API Gateway: `http://localhost:8090`
+- Cart Service: `http://localhost:8091`
+- PostgreSQL: `localhost:5443`
+
 ### ✅ Recommended (full project)
 
 The main execution mode is a single command for the whole platform:
