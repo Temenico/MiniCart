@@ -2,7 +2,7 @@ function App() {
   return (
     <main className="app-shell">
       <h1>MiniCart</h1>
-      <p>Frontend baseline is ready for HU-06 and HU-07 development.</p>
+      <p>La base del frontend está lista para el desarrollo de HU-06 y HU-07.</p>
     </main>
   );
 }
