@@ -1,11 +1,36 @@
-# API Gateway
+# 🌐 API Gateway
 
-Initial module bootstrap for MiniCart API Gateway.
+Módulo encargado de actuar como punto de entrada único entre el frontend y `cart-service`.
 
-## Current Scope (HU-01)
+## 🎯 Objetivo
 
-- Spring Boot project skeleton
-- Spring Cloud Gateway baseline configuration
-- Basic route placeholder to cart service (`/api/**`)
+- Centralizar solicitudes del frontend.
+- Enrutar tráfico de productos y carritos hacia el microservicio.
+- Mantener el gateway sin lógica de negocio.
 
-Business logic is intentionally out of this module.
+## ⚙️ Configuración actual (HU-05)
+
+- Puerto del gateway: `8080`
+- URL objetivo de microservicio:
+  - `CART_SERVICE_URL` (por defecto `http://localhost:8081`)
+
+## 🛣️ Rutas configuradas
+
+- `/api/products` y `/api/products/**` → `cart-service`
+- `/api/carts` y `/api/carts/**` → `cart-service`
+
+Las rutas usan `StripPrefix=1`, por lo que:
+
+- `/api/products` llega al microservicio como `/products`
+- `/api/carts` llega al microservicio como `/carts`
+
+## 🔒 CORS
+
+Se permite origen de frontend local:
+
+- `http://localhost:5173`
+
+## ✅ Regla de diseño
+
+Este módulo no contiene lógica de negocio.  
+Solo enruta y centraliza acceso.
