@@ -1,11 +1,17 @@
 # Cart Service
 
-Initial module bootstrap for MiniCart business service.
+Microservice responsible for MiniCart business logic.
 
-## Current Scope (HU-01)
+## Current Scope
 
-- Spring Boot project skeleton
-- Base dependencies for web, validation, and persistence
-- Local datasource placeholders for PostgreSQL
+- Spring Boot + Spring Data JPA setup
+- PostgreSQL connectivity
+- Product CRUD implementation with validation and error handling
 
-Business endpoints and domain logic will be added in HU-03 and HU-04.
+## Product Endpoints (HU-03)
+
+- `GET /products`
+- `GET /products/{id}`
+- `POST /products`
+- `PUT /products/{id}`
+- `DELETE /products/{id}`
