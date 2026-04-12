@@ -16,13 +16,30 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ProductNotFoundException.class)
+    @ExceptionHandler({
+            ProductNotFoundException.class,
+            CartNotFoundException.class,
+            CartItemNotFoundException.class
+    })
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleProductNotFound(ProductNotFoundException exception, HttpServletRequest request) {
+    public ErrorResponse handleNotFound(RuntimeException exception, HttpServletRequest request) {
         return new ErrorResponse(
                 Instant.now(),
                 HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
+                exception.getMessage(),
+                request.getRequestURI(),
+                null
+        );
+    }
+
+    @ExceptionHandler(BusinessValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBusinessValidation(BusinessValidationException exception, HttpServletRequest request) {
+        return new ErrorResponse(
+                Instant.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 exception.getMessage(),
                 request.getRequestURI(),
                 null
