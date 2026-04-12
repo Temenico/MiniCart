@@ -1,16 +1,18 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import FeedbackMessage from "../components/FeedbackMessage.jsx";
 import ProductForm from "../components/ProductForm.jsx";
 import ProductTable from "../components/ProductTable.jsx";
 import useProducts from "../hooks/useProducts.js";
 import "../styles/products.css";
 
-function ProductManagementPage() {
+function ProductManagementPage({ onGoToCart }) {
   const { products, isLoading, addProduct, editProduct, removeProduct } =
     useProducts();
   const [feedback, setFeedback] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [productPendingDeletion, setProductPendingDeletion] = useState(null);
 
   const sortedProducts = useMemo(
     () => [...products].sort((left, right) => left.id - right.id),
@@ -25,6 +27,18 @@ function ProductManagementPage() {
   function showFeedback(type, text) {
     setFeedback({ type, text });
   }
+
+  useEffect(() => {
+    if (!feedback) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setFeedback(null);
+    }, 3200);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [feedback]);
 
   async function handleCreate(payload) {
     setIsSubmitting(true);
@@ -54,25 +68,23 @@ function ProductManagementPage() {
     showFeedback("error", result.message);
   }
 
-  async function handleDelete(product) {
-    const confirmed = window.confirm(
-      `¿Seguro que deseas eliminar el producto "${product.name}"?`,
-    );
-
-    if (!confirmed) {
+  async function handleDeleteConfirmed() {
+    if (!productPendingDeletion) {
       return;
     }
 
-    const result = await removeProduct(product.id);
+    const result = await removeProduct(productPendingDeletion.id);
     if (result.ok) {
       showFeedback("success", "Producto eliminado correctamente.");
-      if (editingProduct?.id === product.id) {
+      if (editingProduct?.id === productPendingDeletion.id) {
         setEditingProduct(null);
       }
+      setProductPendingDeletion(null);
       return;
     }
 
     showFeedback("error", result.message);
+    setProductPendingDeletion(null);
   }
 
   return (
@@ -87,6 +99,9 @@ function ProductManagementPage() {
           <p>
             Crea, actualiza y mantiene tu inventario visible para la tienda.
           </p>
+          <button type="button" className="button-secondary" onClick={onGoToCart}>
+            Ir al carrito
+          </button>
         </div>
         <div className="hero-metrics" aria-label="Resumen de catálogo">
           <div>
@@ -104,7 +119,7 @@ function ProductManagementPage() {
         </div>
       </section>
 
-      <FeedbackMessage feedback={feedback} onClose={() => setFeedback(null)} />
+      <FeedbackMessage feedback={feedback} />
 
       <section className="workspace-grid">
         <ProductForm
@@ -134,10 +149,23 @@ function ProductManagementPage() {
           <ProductTable
             products={sortedProducts}
             onEdit={setEditingProduct}
-            onDelete={handleDelete}
+            onDelete={setProductPendingDeletion}
           />
         )}
       </section>
+
+      <ConfirmDialog
+        isOpen={Boolean(productPendingDeletion)}
+        title="Confirmar eliminación"
+        description={
+          productPendingDeletion
+            ? `¿Deseas eliminar el producto "${productPendingDeletion.name}"?`
+            : ""
+        }
+        confirmLabel="Eliminar producto"
+        onConfirm={handleDeleteConfirmed}
+        onCancel={() => setProductPendingDeletion(null)}
+      />
     </main>
   );
 }
