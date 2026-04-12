@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: minicart-postgres
+    environment:
+      POSTGRES_DB: minicart
+      POSTGRES_USER: minicart
+      POSTGRES_PASSWORD: minicart
+    ports:
+      - "5432:5432"
+    volumes:
+      - minicart-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  minicart-postgres-data:
