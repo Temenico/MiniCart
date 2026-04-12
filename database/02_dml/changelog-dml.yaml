@@ -1,0 +1,64 @@
+databaseChangeLog:
+  - changeSet:
+      id: 100-seed-products
+      author: dev-team
+      preConditions:
+        onFail: HALT
+        onError: HALT
+        - tableExists:
+            tableName: product
+      changes:
+        - insert:
+            tableName: product
+            columns:
+              - column:
+                  name: name
+                  value: Mouse inalámbrico
+              - column:
+                  name: description
+                  value: Mouse ergonómico inalámbrico con receptor USB
+              - column:
+                  name: price
+                  valueNumeric: 25.90
+              - column:
+                  name: stock
+                  valueNumeric: 30
+              - column:
+                  name: active
+                  valueBoolean: true
+        - insert:
+            tableName: product
+            columns:
+              - column:
+                  name: name
+                  value: Teclado mecánico
+              - column:
+                  name: description
+                  value: Teclado mecánico compacto con switches brown
+              - column:
+                  name: price
+                  valueNumeric: 78.50
+              - column:
+                  name: stock
+                  valueNumeric: 20
+              - column:
+                  name: active
+                  valueBoolean: true
+        - insert:
+            tableName: product
+            columns:
+              - column:
+                  name: name
+                  value: Hub USB-C
+              - column:
+                  name: description
+                  value: Hub multipuerto USB-C con HDMI y USB 3.0
+              - column:
+                  name: price
+                  valueNumeric: 42.00
+              - column:
+                  name: stock
+                  valueNumeric: 15
+              - column:
+                  name: active
+                  valueBoolean: true
