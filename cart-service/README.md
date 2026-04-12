@@ -8,6 +8,18 @@ Microservice responsible for MiniCart business logic.
 - PostgreSQL connectivity
 - Product CRUD implementation with validation and error handling
 
+## Runtime Defaults
+
+- Cart Service port: `8091`
+- PostgreSQL host connection: `localhost:5443`
+- Configurable through environment variables:
+  - `SERVER_PORT`
+  - `DB_HOST`
+  - `DB_PORT`
+  - `DB_NAME`
+  - `DB_USER`
+  - `DB_PASSWORD`
+
 ## Product Endpoints (HU-03)
 
 - `GET /products`

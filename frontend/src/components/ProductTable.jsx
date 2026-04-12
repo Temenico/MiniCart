@@ -1,3 +1,5 @@
+import { formatCopCurrency } from "../utils/currency.js";
+
 function ProductTable({ products, onEdit, onDelete }) {
   if (products.length === 0) {
     return (
@@ -32,7 +34,7 @@ function ProductTable({ products, onEdit, onDelete }) {
                 <td data-label="ID">{product.id}</td>
                 <td data-label="Nombre">{product.name}</td>
                 <td data-label="Descripción">{product.description || "-"}</td>
-                <td data-label="Precio">${Number(product.price).toFixed(2)}</td>
+                <td data-label="Precio">{formatCopCurrency(product.price)}</td>
                 <td data-label="Stock">{product.stock}</td>
                 <td data-label="Estado">
                   <span
