@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: minicart
       POSTGRES_PASSWORD: minicart
     ports:
-      - "5432:5432"
+      - "5443:5432"
     volumes:
       - minicart-postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -22,10 +22,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    working_dir: /liquibase/changelog
     volumes:
       - ./database:/liquibase/changelog
     command:
-      - --defaults-file=/liquibase/changelog/docker/liquibase/liquibase.properties
+      - --url=jdbc:postgresql://postgres:5432/minicart
+      - --username=minicart
+      - --password=minicart
+      - --changeLogFile=changelog-master.yaml
       - update
 
 volumes:

@@ -1,4 +1,4 @@
-function FeedbackMessage({ feedback, onClose }) {
+function FeedbackMessage({ feedback }) {
   if (!feedback) {
     return null;
   }
@@ -10,9 +10,6 @@ function FeedbackMessage({ feedback, onClose }) {
       aria-live="polite"
     >
       <span className="feedback-text">{feedback.text}</span>
-      <button type="button" onClick={onClose} aria-label="Cerrar mensaje">
-        Cerrar ×
-      </button>
     </div>
   );
 }
