@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.minicart.cartservice.controller")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({
