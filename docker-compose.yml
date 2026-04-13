@@ -1,0 +1,83 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: minicart-postgres
+    environment:
+      POSTGRES_DB: minicart
+      POSTGRES_USER: minicart
+      POSTGRES_PASSWORD: minicart
+    ports:
+      - "5443:5432"
+    volumes:
+      - minicart-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U minicart -d minicart"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  liquibase:
+    image: liquibase/liquibase:4.29
+    container_name: minicart-liquibase
+    depends_on:
+      postgres:
+        condition: service_healthy
+    working_dir: /liquibase/changelog
+    volumes:
+      - ./database:/liquibase/changelog
+    command:
+      - --url=jdbc:postgresql://postgres:5432/minicart
+      - --username=minicart
+      - --password=minicart
+      - --changeLogFile=changelog-master.yaml
+      - update
+    restart: "no"
+
+  cart-service:
+    build:
+      context: ./cart-service
+      dockerfile: Dockerfile
+    container_name: minicart-cart-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
+    environment:
+      SERVER_PORT: 8091
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: minicart
+      DB_USER: minicart
+      DB_PASSWORD: minicart
+    ports:
+      - "8091:8091"
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: minicart-api-gateway
+    depends_on:
+      cart-service:
+        condition: service_started
+    environment:
+      SERVER_PORT: 8090
+      CART_SERVICE_URL: http://cart-service:8091
+      FRONTEND_ORIGIN: http://localhost:5273
+    ports:
+      - "8090:8090"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: minicart-frontend
+    depends_on:
+      api-gateway:
+        condition: service_started
+    ports:
+      - "5273:80"
+
+volumes:
+  minicart-postgres-data:

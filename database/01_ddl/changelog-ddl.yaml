@@ -1,0 +1,147 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-product-table
+      author: dev-team
+      changes:
+        - createTable:
+            tableName: product
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(120)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(500)
+              - column:
+                  name: price
+                  type: DECIMAL(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stock
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: ALTER TABLE product ADD CONSTRAINT ck_product_price_non_negative CHECK (price >= 0)
+        - sql:
+            sql: ALTER TABLE product ADD CONSTRAINT ck_product_stock_non_negative CHECK (stock >= 0)
+
+  - changeSet:
+      id: 002-create-cart-table
+      author: dev-team
+      changes:
+        - createTable:
+            tableName: cart
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total
+                  type: DECIMAL(12,2)
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: ALTER TABLE cart ADD CONSTRAINT ck_cart_total_non_negative CHECK (total >= 0)
+
+  - changeSet:
+      id: 003-create-cart-item-table
+      author: dev-team
+      changes:
+        - createTable:
+            tableName: cart_item
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: cart_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unit_price
+                  type: DECIMAL(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subtotal
+                  type: DECIMAL(12,2)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: cart_item
+            baseColumnNames: cart_id
+            referencedTableName: cart
+            referencedColumnNames: id
+            constraintName: fk_cart_item_cart
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: cart_item
+            baseColumnNames: product_id
+            referencedTableName: product
+            referencedColumnNames: id
+            constraintName: fk_cart_item_product
+        - addUniqueConstraint:
+            tableName: cart_item
+            columnNames: cart_id, product_id
+            constraintName: uq_cart_item_cart_product
+        - createIndex:
+            tableName: cart_item
+            indexName: idx_cart_item_cart_id
+            columns:
+              - column:
+                  name: cart_id
+        - createIndex:
+            tableName: cart_item
+            indexName: idx_cart_item_product_id
+            columns:
+              - column:
+                  name: product_id
+        - sql:
+            sql: ALTER TABLE cart_item ADD CONSTRAINT ck_cart_item_quantity_positive CHECK (quantity > 0)
+        - sql:
+            sql: ALTER TABLE cart_item ADD CONSTRAINT ck_cart_item_unit_price_non_negative CHECK (unit_price >= 0)
+        - sql:
+            sql: ALTER TABLE cart_item ADD CONSTRAINT ck_cart_item_subtotal_non_negative CHECK (subtotal >= 0)
