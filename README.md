@@ -1,45 +1,27 @@
 # 🛒 MiniCart
 
-MiniCart is a modular monorepo project for building a small but complete shopping cart web application with clear boundaries between frontend, gateway, business service, database migrations, and documentation.
+MiniCart is a modular monorepo for a complete shopping cart system with integrated frontend, gateway, business microservice, database migrations, and project documentation.
 
 ## 🎯 Objective
 
-Build a maintainable shopping cart system with:
+Deliver a maintainable and executable shopping cart platform with:
 
 - Product management (CRUD)
-- Cart and cart item management
-- Automatic subtotal and total calculations
-- A clear architecture that is easy to understand and evolve
-
-## 📌 Scope
-
-The project includes:
-
-- Monorepo architecture
-- Modular project structure
-- Frontend, API Gateway, and cart service
-- Database and documentation modules
-
-### 🚫 Out of Scope
-
-- Authentication and authorization
-- Checkout and payments
-- Multi-service distributed architecture
-- Advanced reporting and admin features
+- Cart and cart-item management
+- Subtotal and total calculation
+- Clear module boundaries and documentation
 
 ## 🏗️ Architecture
-
-High-level flow:
 
 `Frontend -> API Gateway -> Cart Service -> PostgreSQL`
 
 Modules:
 
-- `frontend`: React + Vite user interface
+- `frontend`: React + Vite interface
 - `api-gateway`: Spring Cloud Gateway routing layer
-- `cart-service`: Spring Boot business service
-- `database`: Liquibase and database-related assets
-- `docs`: user stories, QA evidence, setup and technical notes
+- `cart-service`: Spring Boot business logic
+- `database`: Liquibase changelogs and seed data
+- `docs`: user stories, QA evidence, setup, and technical notes
 
 ## 🧰 Tech Stack
 
@@ -63,42 +45,68 @@ README.md
 .gitignore
 ```
 
-## ⚙️ Prerequisites
-
-- Node.js 20+
-- npm 10+
-- Java 21
-- Maven 3.9+
-- Docker Desktop (or Docker Engine + Compose)
-
-## ▶️ How To Run
-
-### 🔌 Default Ports (conflict-safe setup)
+## 🔌 Runtime Ports
 
 - Frontend: `http://localhost:5273`
 - API Gateway: `http://localhost:8090`
 - Cart Service: `http://localhost:8091`
-- PostgreSQL: `localhost:5443`
+- PostgreSQL (host): `localhost:5443`
 
-### ✅ Recommended (full project)
+## ▶️ Run The Full System (recommended)
 
-The main execution mode is a single command for the whole platform:
+Start all modules with one command:
 
 ```bash
-docker compose up -d
+docker compose up -d --build
 ```
 
-This is the standard way to run MiniCart end-to-end.
+This command provisions and runs:
 
-Stop services:
+- PostgreSQL
+- Liquibase migrations
+- Cart Service
+- API Gateway
+- Frontend
+
+Stop everything:
 
 ```bash
 docker compose down
 ```
 
-### 🛠️ Development mode (module by module)
+Stop and remove database volume (clean reset):
 
-If you need to work on a specific module independently, you can run each one manually.
+```bash
+docker compose down -v
+```
+
+## ✅ Quick Verification
+
+After startup:
+
+- Open frontend: `http://localhost:5273`
+- Check gateway health: `http://localhost:8090/actuator/health`
+- Check products through gateway: `http://localhost:8090/api/products`
+
+If `docker compose up -d --build` finished successfully, the project is fully integrated and ready to use.
+
+## 📚 Key Documentation
+
+- Setup guide:
+  - [Run With Docker Compose](docs/setup-guides/Run-With-Docker-Compose.md)
+- Functional and non-functional requirements (IEEE 830):
+  - [Functional and Non-Functional Requirements](docs/technical-notes/Requerimientos-Funcionales-No-Funcionales.md)
+- MoSCoW prioritization:
+  - [MoSCoW Requirements](docs/technical-notes/Requerimientos-MoSCoW.md)
+- UML diagrams:
+  - [UML Diagrams](docs/diagrams/README.md)
+- User stories and QA evidence:
+  - [User Stories](docs/user-stories/)
+  - [QA Evidence](docs/qa-evidence/)
+
+## 🛠️ Module-by-module Development Mode
+
+Use this only when working on a specific module locally.
 
 Frontend:
 
@@ -122,18 +130,8 @@ cd cart-service
 mvn spring-boot:run
 ```
 
-Database:
+Database and migrations:
 
-- Use Docker Compose for PostgreSQL.
-- Liquibase assets are in `database/`.
-
-## 🧩 User Story Roadmap
-
-1. HU-01: Repository base and initial structure
-2. HU-02: Database module with Liquibase setup
-3. HU-03: Product CRUD in cart-service
-4. HU-04: Cart and cart-item flows in cart-service
-5. HU-05: API Gateway routing integration
-6. HU-06: Frontend for product management
-7. HU-07: Frontend for cart management
-8. HU-08: Final integration, compose, validation, and docs closure
+```bash
+docker compose up -d postgres liquibase
+```
